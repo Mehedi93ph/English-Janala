@@ -16,6 +16,7 @@ const removeActiveClass = () => {
 
 
 const loadLevelWord = (id) => {
+    manageLoading(true);
     const url = `https://openapi.programming-hero.com/api/level/${id}`;
     fetch(url)
         .then((response) => response.json())
@@ -34,6 +35,23 @@ const loadWordDetail = async (id) => {
     // Display word detail in a modal or dedicated section
     displayWordDetail(details.data);
 };
+
+const createElement = (arr) => {
+    const htmlElements = arr.map(item => `<span class="badge badge-lg badge-info p-4">${item}</span>`).join("");
+    console.log(htmlElements);
+    return htmlElements;
+}
+
+const manageLoading = (status) => {
+    if (status === true) {
+        document.getElementById("spinner").classList.remove("hidden");
+        document.getElementById("word-container").classList.add("hidden");
+    } else {
+        document.getElementById("spinner").classList.add("hidden");
+        document.getElementById("word-container").classList.remove("hidden");
+    }
+};
+
 
 const displayWordDetail = (word) => {
     console.log(word);
@@ -55,11 +73,9 @@ const displayWordDetail = (word) => {
     </div>
 
     <div>
-        <h3 class="text-2xl font-bold mb-3">Synonym</h3>
+        <h3 class="text-2xl font-bold mb-3">Synonyms</h3>
         <div class="flex gap-4 flex-wrap">
-            <span class="badge badge-lg badge-info p-4">Syn1</span>
-            <span class="badge badge-lg badge-info p-4">Syn2</span>
-            <span class="badge badge-lg badge-info p-4">Syn3</span>
+            ${createElement(word.synonyms)}
         </div>
     </div>
 
@@ -94,6 +110,7 @@ const displayLevelWords = (words) => {
                 <p class="font-bangla text-xl font-medium text-gray-500">এই Lesson এ এখনো কোন Vocabulary যুক্ত করা হয়নি।</p>
                 <h2 class="font-bangla font-bold text-4xl">নেক্সট Lesson এ যান</h2>
             </div>`;
+        manageLoading(false);
         return;
     }
 
@@ -112,6 +129,7 @@ const displayLevelWords = (words) => {
         `;
         wordContainer.append(wordCard);
     });
+    manageLoading(false);
 };
 
 
